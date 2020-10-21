@@ -2,6 +2,7 @@
 var http = require('http').createServer();
 var io = require('socket.io')(http);
 
+io.origins('*:*');
 io.on('connection', function(socket) {
     console.log('connection default namespace');
     socket.on('msg', function(data, ack) {
