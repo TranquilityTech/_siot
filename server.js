@@ -1,27 +1,15 @@
-'use strict';
-var http = require('http').createServer();
-var io = require('socket.io')(http);
+var express = require("express");
+var sockio = require("socket.io");
+var cors = require("cors")
 
-io.origins((origin, callback) => {
-    /*
-    if (origin !== 'https://foo.example.com') {
-        return callback('origin not allowed', false);
-    }
-    */
-    callback(null, true);
-});
+var app = express();
 
-io.on('connection', function(socket) {
-    console.log('connection default namespace');
-    socket.on('msg', function(data, ack) {
-        if (ack != null) {
-            ack(1, 2, 3);
-        }
-        console.log(`data from default => ${data}`);
-        socket.emit('fromServer', `${data}`);
-    });
-});
+// enable cors for everyone
+app.use(cors());
 
-http.listen(3000, function() {
-    console.log('listening on *:3000');
-});
+// serve static files from the "public" directory
+app.use(express.static('public'));
+
+// start the app on port specified
+var post = 3000;
+var io = sockio.listen(app.listen(post), {log: true});
